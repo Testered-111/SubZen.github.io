@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SubZen">
+  <defs>
+    <radialGradient id="bg" cx="30%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="45%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#030303"/>
+    </radialGradient>
+    <linearGradient id="shine" x1="120" y1="90" x2="410" y2="430">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#a5b4fc"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="#030303"/>
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#bg)"/>
+  <circle cx="398" cy="110" r="96" fill="#ffffff" opacity=".14"/>
+  <circle cx="92" cy="410" r="128" fill="#06b6d4" opacity=".22"/>
+  <path d="M148 322c31 27 69 41 115 41 51 0 83-18 83-48 0-27-21-39-84-51-78-15-118-47-118-101 0-61 52-103 129-103 55 0 100 17 134 49l-47 57c-25-22-54-33-89-33-39 0-64 14-64 36 0 24 22 34 82 46 82 16 121 49 121 105 0 68-56 112-146 112-64 0-118-20-158-58l42-52Z" fill="url(#shine)"/>
+</svg>
