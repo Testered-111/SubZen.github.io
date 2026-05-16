@@ -157,7 +157,7 @@
                     <h2 class="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-3 tracking-widest uppercase">
                         <span class="text-xl ">🪄</span> Magic Scan
                     </h2>
-                    <span id="aiIndicator" class="text-[9px] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md">Offline</span>
+                    <span id="aiIndicator" class="text-[9px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.15)] flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,199,89,0.8)]"></span> SubZen AI</span>
                 </div>
 
                 <label id="scanLabel" onclick="haptic()" class="w-full flex flex-col items-center justify-center gap-5 glass-input hover:bg-black/10 dark:bg-white/10 rounded-[2rem] py-14 cursor-pointer transition-all active:scale-[0.98] relative z-10 group">
@@ -216,14 +216,14 @@
                                 <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Zahlungsart</label>
                                 <select id="subPayment" required class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium appearance-none">
                                     <option value="" disabled selected hidden>Wählen...</option>
-                                    <option value="🍏 Apple Pay">🍏 Apple Pay</option>
-                                    <option value="💳 Visa">💳 Visa</option>
-                                    <option value="💳 Mastercard">💳 Mastercard</option>
-                                    <option value="💳 Revolut">💳 Revolut</option>
-                                    <option value="💳 Amex">💳 Amex</option>
-<option value="🅿️ PayPal">🅿️ PayPal</option>
-                                    <option value="🏦 SEPA">🏦 SEPA</option>
-                                    <option value="💳 Nicht erkannt">💳 Nicht erkannt</option>
+                                    <option value="Apple Pay">Apple Pay</option>
+                                    <option value="Visa">Visa</option>
+                                    <option value="Mastercard">Mastercard</option>
+                                    <option value="Revolut">Revolut</option>
+                                    <option value="Amex">Amex</option>
+                                    <option value="PayPal">PayPal</option>
+                                    <option value="SEPA">SEPA</option>
+                                    <option value="Nicht erkannt">Nicht erkannt</option>
                                 </select>
                             </div>
                         </div>
@@ -272,12 +272,12 @@
                 <h2 class="text-2xl font-semibold text-black dark:text-white tracking-tight">Deine Abos</h2>
                 <select id="filterPayment" onchange="haptic(); render()" class="glass bg-transparent border-black/10 dark:border-white/10 rounded-xl py-2 px-3 text-[10px] font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer tracking-widest uppercase w-auto appearance-none text-right">
                     <option value="all">Alle Karten</option>
-                    <option value="🍏 Apple Pay">Apple Pay</option>
-<option value="💳 Visa">Visa</option>
-                    <option value="💳 Mastercard">Mastercard</option>
-                    <option value="💳 Revolut">Revolut</option>
-                    <option value="🅿️ PayPal">PayPal</option>
-                    <option value="🏦 SEPA">SEPA</option>
+                    <option value="Apple Pay">Apple Pay</option>
+                    <option value="Visa">Visa</option>
+                    <option value="Mastercard">Mastercard</option>
+                    <option value="Revolut">Revolut</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="SEPA">SEPA</option>
                 </select>
             </div>
             <div id="subsList" class="space-y-5"></div>
@@ -425,7 +425,7 @@
             const DB_KEY = 'subzen_data_premium_v1';
             const REMINDER_KEY = 'subzen_reminder_settings_v1';
             const VALID_ICONS = ['🎬', '🎵', '🎮', '🏋️', '📱', '💳', '📦', '🚗'];
-            const DEFAULT_PAYMENT = '💳 Nicht erkannt';
+            const DEFAULT_PAYMENT = 'Nicht erkannt';
             let subscriptions = loadSubscriptions();
             let reminderSettings = loadReminderSettings();
             let deleteIndexCache = null;
@@ -533,8 +533,8 @@
             }
 
             function normalizeStoredPayment(payment) {
-                if (!payment || payment === '❓ Sonstige') return DEFAULT_PAYMENT;
-                return payment;
+                if (!payment || payment.includes('Sonstige') || payment.includes('Nicht erkannt')) return DEFAULT_PAYMENT;
+                return payment.replace(/🍏|💳|🅿️|🏦|❓|\s/g, (match) => match === ' ' ? ' ' : '').trim();
             }
 
             function normalizeStoredSubscriptions() {
@@ -651,8 +651,8 @@
 
             function updateStatus() {
                 const indicator = $('aiIndicator');
-                indicator.innerHTML = '🟢 Offline AI';
-                indicator.className = 'text-[9px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.15)]';
+                indicator.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,199,89,0.8)]"></span> SubZen AI';
+                indicator.className = 'text-[9px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.15)] flex items-center gap-2';
             }
 
             function isStandaloneApp() {
@@ -1074,13 +1074,13 @@
 
             function extractPayment(text) {
                 const normalized = normalizePlain(text);
-                if (/paypal|pay pal/.test(normalized)) return '🅿️ PayPal';
-                if (/apple pay|applepay/.test(normalized)) return '🍏 Apple Pay';
-                if (/revolut/.test(normalized)) return '💳 Revolut';
-                if (/american express|amex/.test(normalized)) return '💳 Amex';
-                if (/mastercard|master card/.test(normalized)) return '💳 Mastercard';
-                if (/\bvisa\b/.test(normalized)) return '💳 Visa';
-                if (/sepa|iban|lastschrift|direct debit|bankkonto|konto/.test(normalized)) return '🏦 SEPA';
+                if (/paypal|pay pal/.test(normalized)) return 'PayPal';
+                if (/apple pay|applepay/.test(normalized)) return 'Apple Pay';
+                if (/revolut/.test(normalized)) return 'Revolut';
+                if (/american express|amex/.test(normalized)) return 'Amex';
+                if (/mastercard|master card/.test(normalized)) return 'Mastercard';
+                if (/\bvisa\b/.test(normalized)) return 'Visa';
+                if (/sepa|iban|lastschrift|direct debit|bankkonto|konto/.test(normalized)) return 'SEPA';
                 return DEFAULT_PAYMENT;
             }
 
