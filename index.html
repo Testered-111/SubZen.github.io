@@ -135,10 +135,7 @@
                     <span class="text-xl group-hover:rotate-45 transition-transform duration-500">⚙️</span>
                 </button>
             </div>
-<div id="smartInsight" class="glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 shadow-2xl transition-all hidden">
-                <span class="text-2xl drop-shadow-md"></span>
-                <p id="insightText" class="text-sm text-gray-800 dark:text-gray-200 font-medium"></p>
-            </div>
+            <div id="insightContainer" class="flex flex-col gap-3 mb-8 hidden"></div>
 
             <div class="grid grid-cols-2 gap-4 md:gap-6">
                 <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
@@ -243,7 +240,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="min-w-0">
                                 <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Nächste Zahlung</label>
-                                <input type="date" id="subDate" required class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium [&::-webkit-calendar-picker-indicator]:filter-[invert(1)] [&::-webkit-calendar-picker-indicator]:opacity-50">
+                                <input type="date" id="subDate" required class="w-full max-w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium appearance-none [&::-webkit-calendar-picker-indicator]:filter-[invert(1)] [&::-webkit-calendar-picker-indicator]:opacity-50">
                             </div>
                             <div class="min-w-0">
                                 <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Zyklus</label>
@@ -1529,8 +1526,10 @@
                 $('historyCount').innerText = historyCount;
                 $('historyList').parentElement.style.display = historyCount === 0 ? 'none' : 'block';
 
-                const insightBox = $('smartInsight');
-                const insightText = $('insightText');
+                const insightContainer = $('insightContainer');
+                insightContainer.innerHTML = '';
+                let hasInsights = false;
+                
                 const urgentSubs = subscriptions.filter(sub => {
                     const date = new Date(sub.date);
                     date.setHours(0, 0, 0, 0);
@@ -1538,18 +1537,26 @@
                 });
 
                 if (urgentSubs.length > 0) {
-                    insightBox.className = 'glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 border-l-rose-500 shadow-[0_0_25px_rgba(225,29,72,0.15)]';
-                    insightBox.querySelector('span').innerText = '⚠️';
-                    insightText.innerHTML = `<span class="text-rose-400 font-semibold tracking-wide">${urgentSubs.length} Abo(s)</span> erfordern baldige Aufmerksamkeit!`;
-                    insightBox.style.display = 'flex';
-                } else if (mostExpensive.price > 0) {
-                    insightBox.className = 'glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 border-l-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.1)]';
-                    insightBox.querySelector('span').innerText = '💡';
-                    insightText.innerHTML = `Dein größter Posten: <span class="text-cyan-300 font-semibold tracking-wide">${escapeHTML(mostExpensive.name)} (${mostExpensive.price.toFixed(2).replace('.', ',')} €)</span>`;
-                    insightBox.style.display = 'flex';
-                } else {
-                    insightBox.style.display = 'none';
+                    insightContainer.innerHTML += `
+                        <div class="glass w-full rounded-2xl p-4 flex items-center gap-4 border-l-2 border-l-rose-500 shadow-[0_0_25px_rgba(225,29,72,0.15)]">
+                            <span class="text-2xl drop-shadow-md">⚠️</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200 font-medium"><span class="text-rose-600 dark:text-rose-400 font-semibold tracking-wide">${urgentSubs.length} Abo(s)</span> erfordern baldige Aufmerksamkeit!</p>
+                        </div>
+                    `;
+                    hasInsights = true;
                 }
+                
+                if (mostExpensive.price > 0) {
+                    insightContainer.innerHTML += `
+                        <div class="glass w-full rounded-2xl p-4 flex items-center gap-4 border-l-2 border-l-cyan-500 shadow-[0_0_25px_rgba(34,211,238,0.1)]">
+                            <span class="text-2xl drop-shadow-md">💡</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">Dein größter Posten: <span class="text-cyan-600 dark:text-cyan-400 font-semibold tracking-wide">${escapeHTML(mostExpensive.name)} (${mostExpensive.price.toFixed(2).replace('.', ',')} €)</span></p>
+                        </div>
+                    `;
+                    hasInsights = true;
+                }
+                
+                insightContainer.style.display = hasInsights ? 'flex' : 'none';
             }
 
             function ensureFilterOption(value, label) {
