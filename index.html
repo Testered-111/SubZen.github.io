@@ -20,84 +20,105 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script>
+        <script>
         tailwind.config = {
             darkMode: 'class',
             theme: { 
                 extend: { 
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'] },
                     colors: { 
-                        app: { bg: '#030303', glass: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.06)' }
+                        app: { bg: '#000000', glass: 'rgba(255,255,255,0.02)', border: 'rgba(255,255,255,0.08)' }
                     } 
                 } 
             }
         }
     </script>
     <style>
-        /* iOS Fixes & Clean Scrollbar */
-        ::-webkit-scrollbar { display: none; }
-        body {
-            background-color: #030303;
-            overscroll-behavior-y: none;
-            -webkit-overflow-scrolling: touch;
-            color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
+        :root {
+            --bg-color: #f5f5f7;
+            --text-color: #1d1d1f;
+            --glass-bg: rgba(0, 0, 0, 0.02);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-card-bg: linear-gradient(145deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.01) 100%);
+            --glass-input-bg: rgba(0,0,0,0.03);
+            --glass-input-border: rgba(0,0,0,0.1);
+            --glass-input-focus: rgba(0,0,0,0.08);
+            --glass-input-text: #1d1d1f;
+            --text-gradient-start: #1d1d1f;
+            --text-gradient-end: #86868b;
+            --target-border: rgba(0,0,0,0.6);
+            --scanner-line-color: #000;
         }
 
-        /* Next-Level Mesh Ambient Background */
-        .ambient-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none; background: radial-gradient(circle at 50% 50%, #050505 0%, #000 100%); }
-        .blob { position: absolute; filter: blur(90px); opacity: 0.35; mix-blend-mode: screen; animation: float 15s infinite ease-in-out alternate; will-change: transform; border-radius: 50%; }
-        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #2563eb; animation-delay: 0s; }
-        .blob-2 { top: 40%; right: -20%; width: 60vw; height: 60vw; background: #7c3aed; animation-delay: -3s; }
-        .blob-3 { bottom: -20%; left: 10%; width: 45vw; height: 45vw; background: #0891b2; animation-delay: -7s; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(50px, -50px) scale(1.1) rotate(45deg); } 100% { transform: translate(-30px, 30px) scale(0.95) rotate(-15deg); } }
+        html.dark {
+            --bg-color: #000000;
+            --text-color: #f5f5f7;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-card-bg: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            --glass-input-bg: rgba(255,255,255,0.03);
+            --glass-input-border: rgba(255,255,255,0.1);
+            --glass-input-focus: rgba(255,255,255,0.08);
+            --glass-input-text: #ffffff;
+            --text-gradient-start: #ffffff;
+            --text-gradient-end: #a1a1a6;
+            --target-border: rgba(255,255,255,0.8);
+            --scanner-line-color: #fff;
+        }
 
-        /* Ultra Premium Glassmorphism */
-        .glass { background: var(--tw-colors-app-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--tw-colors-app-border); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 32px rgba(0, 0, 0, 0.4); }
-        .glass-card { background: linear-gradient(180deg, rgba(30,41,59,0.4) 0%, rgba(15,23,42,0.2) 100%); backdrop-filter: blur(16px); border: 1px solid var(--tw-colors-app-border); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .glass-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; color: white; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
-        .glass-input:focus { background: rgba(0,0,0,0.6); border-color: #3b82f6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 0 2px rgba(59,130,246,0.2); outline: none; }
+
+        /* Apple Vision/2026 Glass Optic */
+        ::-webkit-scrollbar { display: none; }
+        body {
+            background-color: var(--bg-color); transition: background-color 0.4s ease;
+            overscroll-behavior-y: none;
+            -webkit-overflow-scrolling: touch;
+            color: var(--text-color); transition: color 0.4s ease;
+            -webkit-tap-highlight-color: transparent;
+            font-feature-settings: "cv01", "cv02", "cv03", "cv04";
+        }
+
+        /* VisionOS Glassmorphism */
+        .glass { background: var(--glass-bg); backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%); border: 0.5px solid var(--glass-border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--glass-border); }
+        .glass-card { background: var(--glass-card-bg); backdrop-filter: blur(30px) saturate(150%); border: 0.5px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .glass-input { background: var(--glass-input-bg); border: 0.5px solid var(--glass-input-border); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: var(--glass-input-text); backdrop-filter: blur(20px); }
+        .glass-input:focus { background: var(--glass-input-focus); border-color: rgba(255,255,255,0.3); outline: none; box-shadow: 0 0 0 4px rgba(255,255,255,0.05); }
         
-        /* Smooth Progress Bar */
         .progress-bar-fill { transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* Next Gen Scanner */
-        .cyber-grid { background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 24px 24px; }
-        .target-box { position: relative; padding: 4px; border-radius: 1.5rem; transition: all 0.5s ease; border: 1px solid transparent; }
-        .target-box::before, .target-box::after, .corner-tr, .corner-bl { content: ''; position: absolute; width: 40px; height: 40px; border-color: #38bdf8; border-style: solid; z-index: 30; transition: all 0.5s; }
-        .target-box::before { top: 0; left: 0; border-width: 2px 0 0 2px; border-top-left-radius: 1.5rem; }
-        .target-box::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; border-bottom-right-radius: 1.5rem; }
-        .corner-tr { top: 0; right: 0; border-width: 2px 2px 0 0; border-top-right-radius: 1.5rem; }
-        .corner-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; border-bottom-left-radius: 1.5rem; }
+        /* Minimal Scanner */
+        .cyber-grid { background: rgba(0,0,0,0.2); }
+        .target-box { position: relative; padding: 4px; border-radius: 2rem; transition: all 0.5s ease; border: 1px solid rgba(255,255,255,0.1); }
+        .target-box::before, .target-box::after, .corner-tr, .corner-bl { content: ''; position: absolute; width: 40px; height: 40px; border-color: var(--target-border); border-style: solid; z-index: 30; transition: all 0.5s; }
+        .target-box::before { top: 0; left: 0; border-width: 2px 0 0 2px; border-top-left-radius: 2rem; }
+        .target-box::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; border-bottom-right-radius: 2rem; }
+        .corner-tr { top: 0; right: 0; border-width: 2px 2px 0 0; border-top-right-radius: 2rem; }
+        .corner-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; border-bottom-left-radius: 2rem; }
         
-        .scan-success::before, .scan-success::after, .scan-success .corner-tr, .scan-success .corner-bl { border-color: #10b981 !important; width: 100%; height: 100%; border-radius: 1.5rem; opacity: 0.15; background: rgba(16, 185, 129, 0.1); border-width: 1px;}
+        .scan-success::before, .scan-success::after, .scan-success .corner-tr, .scan-success .corner-bl { border-color: #34c759 !important; width: 100%; height: 100%; border-radius: 2rem; opacity: 0.2; background: rgba(52, 199, 89, 0.1); border-width: 1px;}
         
-        .scanner-line { position: absolute; left: 0; width: 100%; height: 1px; background: #fff; box-shadow: 0 0 10px #fff, 0 0 20px #38bdf8, 0 0 40px #8b5cf6; animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; z-index: 20; }
-        .scanner-glow { position: absolute; left: 0; width: 100%; height: 100px; background: linear-gradient(to bottom, rgba(56,189,248,0.2), transparent); animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; z-index: 10; }
+        .scanner-line { position: absolute; left: 0; width: 100%; height: 2px; background: var(--scanner-line-color); box-shadow: 0 0 10px var(--scanner-line-color), 0 0 20px #05d5ff; animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; z-index: 20; }
+        .scanner-glow { position: absolute; left: 0; width: 100%; height: 100px; background: linear-gradient(to bottom, rgba(5,213,255,0.2), transparent); animation: scan 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; z-index: 10; }
         @keyframes scan { 0% { top: -100px; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        /* Modern Loader & Animations */
-        .loader { border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #3b82f6; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; display: inline-block; vertical-align: middle; margin-right: 8px;}
+        .loader { border: 2px solid rgba(255,255,255,0.1); border-top: 2px solid #fff; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; display: inline-block; vertical-align: middle; margin-right: 8px;}
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .slide-up { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .card-enter { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .card-enter { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
         
-        /* Accordion transition */
-        .accordion-content { transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; display: grid; grid-template-rows: 0fr; opacity: 0; }
+        .accordion-content { transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; display: grid; grid-template-rows: 0fr; opacity: 0; }
         .accordion-content > div { overflow: hidden; }
         .accordion-content.open { grid-template-rows: 1fr; opacity: 1; }
         
-        /* Custom Gradients for Text */
-        .text-gradient { background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .text-gradient-cyan { background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient { background: linear-gradient(135deg, var(--text-gradient-start) 0%, var(--text-gradient-end) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-cyan { background: linear-gradient(135deg, #05d5ff 0%, #5511ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body class="antialiased min-h-screen pb-24">
 
-    <div class="ambient-bg">
-        <div class="blob blob-1"></div>
+    
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
@@ -107,61 +128,51 @@
         <header class="mb-10 relative slide-up" style="animation-delay: 0.1s;">
             <div class="flex justify-between items-start mb-8">
                 <div>
-                    <p id="greetingText" class="text-indigo-300/80 font-bold tracking-[0.15em] text-[10px] uppercase mb-2">Willkommen zurück</p>
-                    <h1 class="text-5xl font-extrabold tracking-tight text-white">Sub<span class="text-gradient-cyan">Zen</span></h1>
+                    <p id="greetingText" class="text-gray-600 dark:text-gray-400 font-medium tracking-widest text-[11px] uppercase mb-1">Willkommen zurück</p>
+                    <h1 class="text-5xl font-semibold tracking-tighter text-black dark:text-white">Sub<span class="text-gradient">Zen</span></h1>
                 </div>
-                <button onclick="haptic(); openSettings()" class="w-12 h-12 flex items-center justify-center glass rounded-full hover:bg-white/10 transition-all active:scale-90 shadow-lg group">
+                <button onclick="haptic(); openSettings()" class="w-12 h-12 flex items-center justify-center glass rounded-full hover:bg-black/10 dark:bg-white/10 transition-all active:scale-90 shadow-lg group">
                     <span class="text-xl group-hover:rotate-45 transition-transform duration-500">⚙️</span>
                 </button>
             </div>
 <div id="smartInsight" class="glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 shadow-2xl transition-all hidden">
                 <span class="text-2xl drop-shadow-md"></span>
-                <p id="insightText" class="text-sm text-gray-200 font-medium"></p>
+                <p id="insightText" class="text-sm text-gray-800 dark:text-gray-200 font-medium"></p>
             </div>
 
             <div class="grid grid-cols-2 gap-4 md:gap-6">
                 <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-10 -mt-10 transition-all group-hover:bg-blue-500/20"></div>
-                    <p class="text-[10px] text-gray-400/80 uppercase tracking-[0.2em] font-bold mb-2">Aktiv / Monat</p>
-                    <p class="text-3xl md:text-4xl font-extrabold text-white tracking-tighter" id="activeMonthly">0,00 €</p>
-                    <div class="mt-3 flex items-center gap-2">
-                        <div class="bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">
-                            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider" id="savedMonthly">+ 0,00 € gespart</span>
-                        </div>
-                    </div>
+                    
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400 uppercase tracking-widest font-medium mb-1">Aktiv / Monat</p>
+                    <p class="text-4xl md:text-5xl font-medium text-black dark:text-white tracking-tighter" id="activeMonthly">0,00 €</p>
                 </div>
                 <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -mr-10 -mt-10 transition-all group-hover:bg-purple-500/20"></div>
-                    <p class="text-[10px] text-gray-400/80 uppercase tracking-[0.2em] font-bold mb-2">Aktiv / Jahr</p>
-                    <p class="text-3xl md:text-4xl font-extrabold text-white tracking-tighter" id="activeYearly">0,00 €</p>
-                    <div class="mt-3 flex items-center gap-2">
-                        <div class="bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">
-                            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider" id="savedYearly">+ 0,00 € gespart</span>
-                        </div>
-                    </div>
+                    
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400 uppercase tracking-widest font-medium mb-1">Aktiv / Jahr</p>
+                    <p class="text-4xl md:text-5xl font-medium text-black dark:text-white tracking-tighter" id="activeYearly">0,00 €</p>
                 </div>
             </div>
         </header>
 
         <section class="mb-10 p-[1px] rounded-[2.5rem] bg-gradient-to-b from-white/10 to-transparent shadow-2xl slide-up" style="animation-delay: 0.2s;">
-            <div class="bg-[#050505]/80 backdrop-blur-3xl p-6 md:p-8 rounded-[2.5rem] cyber-grid relative overflow-hidden shadow-inner">
+            <div class="glass p-6 md:p-8 rounded-[2.5rem] relative overflow-hidden">
                 <div class="flex justify-between items-center w-full mb-8 relative z-10">
-                    <h2 class="text-sm font-black text-white flex items-center gap-3 tracking-[0.1em] uppercase">
-                        <span class="text-xl drop-shadow-[0_0_10px_rgba(56,189,248,0.5)]">🪄</span> Magic Scan
+                    <h2 class="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-3 tracking-widest uppercase">
+                        <span class="text-xl ">🪄</span> Magic Scan
                     </h2>
-                    <span id="aiIndicator" class="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md">Offline</span>
+                    <span id="aiIndicator" class="text-[9px] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md">Offline</span>
                 </div>
 
-                <label id="scanLabel" onclick="haptic()" class="w-full flex flex-col items-center justify-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 border-dashed rounded-[2rem] py-14 cursor-pointer transition-all active:scale-[0.98] relative z-10 group">
-                    <div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-2xl shadow-[0_0_30px_rgba(56,189,248,0.3)] group-hover:shadow-[0_0_40px_rgba(56,189,248,0.5)] transition-shadow duration-300 rotate-3 group-hover:rotate-0">
-                        <span class="text-2xl text-white drop-shadow-md">📷</span>
+                <label id="scanLabel" onclick="haptic()" class="w-full flex flex-col items-center justify-center gap-5 glass-input hover:bg-black/10 dark:bg-white/10 rounded-[2rem] py-14 cursor-pointer transition-all active:scale-[0.98] relative z-10 group">
+                    <div class="w-16 h-16 flex items-center justify-center glass rounded-2xl group-hover:scale-105 transition-transform duration-500">
+                        <span class="text-2xl text-black dark:text-white drop-shadow-md">📷</span>
                     </div>
-                    <span class="text-[11px] font-bold text-gray-300 tracking-[0.2em] uppercase mt-2">Rechnung hochladen</span>
+                    <span class="text-[11px] font-bold text-gray-700 dark:text-gray-300 tracking-[0.2em] uppercase mt-2">Rechnung hochladen</span>
                     <input type="file" id="scanInput" accept="image/*" class="hidden">
                 </label>
 
                 <div id="imagePreviewContainer" class="hidden w-full flex flex-col items-center justify-center mt-2 relative z-10">
-<div id="targetBox" class="target-box overflow-hidden max-w-full bg-black/60 backdrop-blur-xl">
+<div id="targetBox" class="target-box overflow-hidden max-w-full bg-white/60 dark:bg-black/60 backdrop-blur-xl">
                         <div class="corner-tr"></div>
                         <div class="corner-bl"></div>
                         <img id="scanPreviewImage" class="max-h-[280px] w-auto object-contain rounded-xl opacity-80" src="" alt="Scan Preview">
@@ -175,14 +186,14 @@
                     <span id="scanText" class="text-blue-300">System läuft an...</span>
                 </div>
 
-                <label id="reloadScanBtn" for="scanInput" onclick="haptic()" class="hidden w-full mt-5 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] text-[10px] uppercase tracking-widest relative z-10">
+                <label id="reloadScanBtn" for="scanInput" onclick="haptic()" class="hidden w-full mt-5 flex items-center justify-center gap-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 text-black dark:text-white font-bold py-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] text-xs font-medium tracking-wide relative z-10">
                     <span class="text-lg">🔄</span> Erneut Scannen
                 </label>
             </div>
         </section>
 
         <section class="glass rounded-[2rem] mb-10 overflow-hidden shadow-xl slide-up" style="animation-delay: 0.3s;">
-            <button onclick="haptic(); toggleAddForm()" class="w-full p-6 flex items-center justify-between text-white font-bold outline-none bg-transparent hover:bg-white/5 transition-colors">
+            <button onclick="haptic(); toggleAddForm()" class="w-full p-6 flex items-center justify-between text-black dark:text-white font-bold outline-none bg-transparent hover:bg-black/5 dark:bg-white/5 transition-colors">
                 <span class="flex items-center gap-4 text-sm tracking-wide">
                     <span class="bg-indigo-500/20 text-indigo-400 p-2 rounded-xl text-sm border border-indigo-500/30">➕</span> 
                     Manuell hinzufügen
@@ -195,17 +206,17 @@
                     <form id="addForm" class="space-y-5 pt-2">
                         
                         <div>
-                            <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Dienst Name</label>
+                            <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Dienst Name</label>
                             <input type="text" id="subName" required class="w-full glass-input rounded-2xl p-4 text-sm font-medium" placeholder="z.B. Netflix, Gym...">
                         </div>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="min-w-0">
-                                <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Preis (€)</label>
+                                <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Preis (€)</label>
                                 <input type="number" step="0.01" id="subPrice" required class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium" placeholder="9.99">
                             </div>
                             <div class="min-w-0">
-                                <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Zahlungsart</label>
+                                <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Zahlungsart</label>
                                 <select id="subPayment" required class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium appearance-none">
                                     <option value="" disabled selected hidden>Wählen...</option>
                                     <option value="🍏 Apple Pay">🍏 Apple Pay</option>
@@ -221,7 +232,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Kategorie</label>
+                            <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Kategorie</label>
                             <select id="subIcon" class="w-full glass-input rounded-2xl p-4 text-sm font-medium appearance-none">
                                 <option value="🎬">🎬 Streaming</option><option value="🎵">🎵 Musik</option><option value="🎮">🎮 Gaming</option>
                                 <option value="🏋️">🏋️ Fitness</option><option value="📱">📱 Software</option><option value="💳">💳 Finanzen</option>
@@ -231,11 +242,11 @@
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="min-w-0">
-                                <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Nächste Zahlung</label>
+                                <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Nächste Zahlung</label>
                                 <input type="date" id="subDate" required class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium [&::-webkit-calendar-picker-indicator]:filter-[invert(1)] [&::-webkit-calendar-picker-indicator]:opacity-50">
                             </div>
                             <div class="min-w-0">
-                                <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Zyklus</label>
+                                <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Zyklus</label>
                                 <select id="subCycle" class="w-full min-w-0 glass-input rounded-2xl p-4 text-sm font-medium appearance-none">
                                     <option value="monthly">Monatlich</option><option value="yearly">Jährlich</option>
                                 </select>
@@ -243,7 +254,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-gray-400 mb-2 text-[10px] uppercase tracking-widest font-bold ml-1">Status</label>
+                            <label class="block text-gray-600 dark:text-gray-400 mb-2 text-xs font-medium ml-1">Status</label>
                             <select id="subStatus" class="w-full glass-input rounded-2xl p-4 text-sm font-bold appearance-none text-emerald-400">
                                 <option value="active" class="text-emerald-400">🟢 Aktiv (Wird abgebucht)</option>
                                 <option value="trial" class="text-indigo-400">🔵 Probeabo (Kostenlos)</option>
@@ -251,7 +262,7 @@
                             </select>
                         </div>
                         
-                        <button type="submit" id="saveSubBtn" onclick="haptic()" class="w-full mt-4 bg-white text-black hover:bg-gray-200 font-extrabold py-4 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all active:scale-95 uppercase tracking-[0.2em] text-[11px]">
+                        <button type="submit" id="saveSubBtn" onclick="haptic()" class="w-full mt-6 bg-black text-white dark:bg-white dark:text-black hover:bg-gray-200 font-semibold py-4 rounded-2xl shadow-[0_4_14px_rgba(255,255,255,0.2)] transition-all active:scale-95 tracking-wide text-sm">
                             Abonnement Speichern
                         </button>
                     </form>
@@ -261,8 +272,8 @@
 
         <section class="mb-10 slide-up" style="animation-delay: 0.4s;">
             <div class="flex justify-between items-end mb-6 px-2">
-                <h2 class="text-2xl font-extrabold text-white tracking-tight">Deine Abos</h2>
-                <select id="filterPayment" onchange="haptic(); render()" class="glass bg-transparent border-white/10 rounded-xl py-2 px-3 text-[10px] font-bold text-gray-300 outline-none cursor-pointer tracking-widest uppercase w-auto appearance-none text-right">
+                <h2 class="text-2xl font-semibold text-black dark:text-white tracking-tight">Deine Abos</h2>
+                <select id="filterPayment" onchange="haptic(); render()" class="glass bg-transparent border-black/10 dark:border-white/10 rounded-xl py-2 px-3 text-[10px] font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer tracking-widest uppercase w-auto appearance-none text-right">
                     <option value="all">Alle Karten</option>
                     <option value="🍏 Apple Pay">Apple Pay</option>
 <option value="💳 Visa">Visa</option>
@@ -275,8 +286,8 @@
             <div id="subsList" class="space-y-5"></div>
         </section>
 
-        <section class="glass rounded-[2rem] p-1 mb-10 slide-up border border-white/5" style="animation-delay: 0.5s;">
-            <button onclick="haptic(); toggleHistoryList()" class="w-full flex items-center justify-between p-5 text-gray-500 hover:text-white transition outline-none rounded-[1.8rem] hover:bg-white/5">
+        <section class="glass rounded-[2rem] p-1 mb-10 slide-up border border-black/5 dark:border-white/5" style="animation-delay: 0.5s;">
+            <button onclick="haptic(); toggleHistoryList()" class="w-full flex items-center justify-between p-5 text-gray-500 hover:text-black dark:text-white transition outline-none rounded-[1.8rem] hover:bg-black/5 dark:bg-white/5">
                 <span class="font-bold flex items-center gap-3 uppercase tracking-[0.15em] text-[11px]">
                     <span class="text-lg opacity-70">📜</span> Historie (<span id="historyCount">0</span>)
                 </span>
@@ -286,97 +297,134 @@
         </section>
 
         <footer class="text-center pb-8 pt-4 slide-up" style="animation-delay: 0.6s;">
-            <div class="flex justify-center items-center gap-8 text-[10px] font-black text-gray-600 uppercase tracking-[0.2em]">
+            <div class="flex justify-center items-center gap-8 text-[10px] font-semibold text-gray-600 uppercase tracking-[0.2em]">
                 <button onclick="haptic(); openBackupModal()" class="hover:text-indigo-400 transition-colors flex flex-col items-center gap-2"><span class="text-xl">💾</span> Daten Export</button>
-                <div class="w-px h-8 bg-white/10"></div>
+                <div class="w-px h-8 bg-black/10 dark:bg-white/10"></div>
                 <button onclick="haptic(); openImportModal()" class="hover:text-cyan-400 transition-colors flex flex-col items-center gap-2"><span class="text-xl">📂</span> Daten Import</button>
             </div>
         </footer>
 
     </main>
 
-    <div id="settingsModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50 transition-opacity">
-        <div class="glass p-7 rounded-[2.5rem] max-w-sm w-full border-white/10 shadow-2xl relative">
-            <h3 class="text-2xl font-extrabold text-white mb-2 text-center">SubZen App</h3>
-            <p class="text-gray-400 text-xs mb-6 text-center leading-relaxed font-medium">Installiere SubZen auf dem iPhone über Teilen → Zum Home-Bildschirm. Danach laufen App-Modus, Offline-Cache und Mitteilungen am zuverlässigsten.</p>
+    <div id="settingsModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50 transition-opacity">
+        <div class="glass p-7 rounded-[2.5rem] max-w-sm w-full border-black/10 dark:border-white/10 shadow-2xl relative">
+            <h3 class="text-2xl font-semibold text-black dark:text-white mb-2 text-center">SubZen App</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-xs mb-6 text-center leading-relaxed font-medium">Installiere SubZen auf dem iPhone über Teilen → Zum Home-Bildschirm. Danach laufen App-Modus, Offline-Cache und Mitteilungen am zuverlässigsten.</p>
 
             <div class="space-y-4 mb-6">
-                <div class="bg-black/40 border border-white/5 rounded-2xl p-4">
+                <div class="bg-white/60 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-2xl p-4">
                     <div class="flex items-center justify-between gap-4">
-                        <span class="text-[10px] uppercase tracking-widest text-gray-500 font-black">PWA Status</span>
-                        <span id="pwaInstallStatus" class="text-[10px] uppercase tracking-widest text-amber-300 font-black text-right">Prüfe...</span>
+                        <span class="text-xs font-medium tracking-wide text-gray-500 font-semibold">PWA Status</span>
+                        <span id="pwaInstallStatus" class="text-xs font-medium tracking-wide text-amber-300 font-semibold text-right">Prüfe...</span>
                     </div>
-                    <p id="pwaInstallHint" class="text-xs text-gray-400 mt-3 leading-relaxed">Safari öffnen, Teilen antippen und „Zum Home-Bildschirm“ wählen.</p>
+                    <p id="pwaInstallHint" class="text-xs text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">Safari öffnen, Teilen antippen und „Zum Home-Bildschirm“ wählen.</p>
+                </div>
+                <div class="bg-white/60 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-2xl p-4">
+                    <label class="block text-xs uppercase tracking-widest text-gray-500 font-semibold mb-3">Erscheinungsbild</label>
+                    <select id="themeSelect" onchange="haptic(); saveThemeSettings()" class="w-full glass-input rounded-2xl p-3 text-sm font-bold appearance-none">
+                        <option value="system">🖥️ System Standard</option>
+                        <option value="dark">🌙 Dark Mode</option>
+                        <option value="light">☀️ Light Mode</option>
+                    </select>
                 </div>
 
-                <div class="bg-black/40 border border-white/5 rounded-2xl p-4">
-                    <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-black mb-3">Erinnern vor Zahlung</label>
+                <div class="bg-white/60 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-2xl p-4">
+                    <label class="block text-xs font-medium tracking-wide text-gray-500 font-semibold mb-3">Erinnern vor Zahlung</label>
                     <select id="reminderLeadDays" onchange="haptic(); saveReminderSettings()" class="w-full glass-input rounded-2xl p-3 text-sm font-bold appearance-none">
                         <option value="0">Am Zahlungstag</option>
                         <option value="1">1 Tag vorher</option>
                         <option value="3">3 Tage vorher</option>
                         <option value="7">7 Tage vorher</option>
                     </select>
-                    <p id="notificationStatus" class="text-xs text-gray-400 mt-3 leading-relaxed">Mitteilungen sind noch nicht aktiviert.</p>
+                    <p id="notificationStatus" class="text-xs text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">Mitteilungen sind noch nicht aktiviert.</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 gap-3">
-                <button id="notificationBtn" onclick="haptic(); requestReminderNotifications()" class="w-full bg-white text-black py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg hover:bg-gray-200 transition-colors">Mitteilungen aktivieren</button>
-                <button onclick="haptic(); sendTestReminderNotification()" class="w-full bg-white/5 py-4 rounded-2xl font-bold text-gray-300 text-[10px] uppercase tracking-widest hover:bg-white/10 transition-colors">Test-Mitteilung</button>
-                <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
+                <button id="notificationBtn" onclick="haptic(); requestReminderNotifications()" class="w-full bg-black text-white dark:bg-white dark:text-black py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide shadow-lg hover:bg-gray-200 transition-colors">Mitteilungen aktivieren</button>
+                <button onclick="haptic(); sendTestReminderNotification()" class="w-full bg-black/5 dark:bg-white/5 py-4 rounded-2xl font-bold text-gray-700 dark:text-gray-300 text-xs font-medium tracking-wide hover:bg-black/10 dark:bg-white/10 transition-colors">Test-Mitteilung</button>
+                <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-black dark:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
             </div>
         </div>
     </div>
 
-    <div id="deleteModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
+    <div id="deleteModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
         <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full text-center border-rose-500/20 shadow-[0_0_50px_rgba(225,29,72,0.1)]">
             <div class="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-rose-500/20 text-3xl">🗑️</div>
-            <h3 class="text-2xl font-extrabold text-white mb-2">Abo unwiderruflich löschen?</h3>
-            <p class="text-gray-400 mb-8 text-xs font-medium">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+            <h3 class="text-2xl font-semibold text-black dark:text-white mb-2">Abo unwiderruflich löschen?</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-8 text-xs font-medium">Diese Aktion kann nicht rückgängig gemacht werden.</p>
             <div class="flex gap-4">
-                <button onclick="haptic(); closeAllModals()" class="flex-1 bg-white/5 py-4 rounded-2xl font-bold text-gray-400 text-[10px] uppercase tracking-widest hover:bg-white/10 transition-colors">Abbruch</button>
-                <button onclick="haptic(); confirmDelete()" class="flex-1 bg-rose-600 hover:bg-rose-500 py-4 rounded-2xl font-extrabold text-white text-[10px] uppercase tracking-widest transition-colors">Löschen</button>
+                <button onclick="haptic(); closeAllModals()" class="flex-1 bg-black/5 dark:bg-white/5 py-4 rounded-2xl font-bold text-gray-600 dark:text-gray-400 text-xs font-medium tracking-wide hover:bg-black/10 dark:bg-white/10 transition-colors">Abbruch</button>
+                <button onclick="haptic(); confirmDelete()" class="flex-1 bg-rose-600 hover:bg-rose-500 py-4 rounded-2xl font-semibold text-black dark:text-white text-xs font-medium tracking-wide transition-colors">Löschen</button>
             </div>
         </div>
     </div>
 
-    <div id="actionModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden flex items-end justify-center p-5 z-50">
-        <div class="glass p-5 rounded-[2rem] max-w-sm w-full border-white/10 shadow-2xl mb-4">
+    <div id="actionModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl hidden flex items-end justify-center p-5 z-50">
+        <div class="glass p-5 rounded-[2rem] max-w-sm w-full border-black/10 dark:border-white/10 shadow-2xl mb-4">
             <div class="px-2 pt-2 pb-5 text-center">
-                <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mb-2">Abo Aktionen</p>
-                <h3 id="actionTitle" class="text-2xl font-extrabold text-white tracking-tight">Abo</h3>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-semibold mb-2">Abo Aktionen</p>
+                <h3 id="actionTitle" class="text-2xl font-semibold text-black dark:text-white tracking-tight">Abo</h3>
             </div>
             <div class="grid gap-3">
-                <button onclick="haptic(); editSelectedSubscription()" class="w-full bg-white text-black py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg hover:bg-gray-200 transition-colors">Bearbeiten</button>
-                <button id="actionStatusBtn" onclick="haptic(); toggleSelectedStatus()" class="w-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-emerald-500/15 transition-colors">Kündigen</button>
-                <button onclick="haptic(); deleteSelectedSubscription()" class="w-full bg-rose-500/10 border border-rose-500/20 text-rose-300 py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-rose-500/15 transition-colors">Löschen</button>
-                <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
+                <button onclick="haptic(); editSelectedSubscription()" class="w-full bg-black text-white dark:bg-white dark:text-black py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide shadow-lg hover:bg-gray-200 transition-colors">Bearbeiten</button>
+                <button id="actionStatusBtn" onclick="haptic(); toggleSelectedStatus()" class="w-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide hover:bg-emerald-500/15 transition-colors">Kündigen</button>
+                <button onclick="haptic(); deleteSelectedSubscription()" class="w-full bg-rose-500/10 border border-rose-500/20 text-rose-300 py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide hover:bg-rose-500/15 transition-colors">Löschen</button>
+                <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-black dark:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
             </div>
         </div>
     </div>
 
-    <div id="backupModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
+    <div id="backupModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
         <div class="glass p-8 rounded-[2.5rem] w-full max-w-md border-indigo-500/20">
-            <h3 class="text-lg font-black text-white mb-6 uppercase tracking-widest text-center text-indigo-400">JSON Export</h3>
-            <textarea id="backupText" readonly class="w-full h-32 glass-input rounded-2xl p-4 text-[10px] text-indigo-200/60 font-mono mb-6 outline-none resize-none bg-black/50"></textarea>
-            <button onclick="haptic(); copyToClipboard()" id="copyBtn" class="w-full bg-indigo-500 text-white py-4 rounded-2xl font-extrabold mb-3 text-[10px] uppercase tracking-[0.2em] hover:bg-indigo-400 transition-colors shadow-lg shadow-indigo-500/20">📋 Code kopieren</button>
-            <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
+            <h3 class="text-lg font-semibold text-black dark:text-white mb-6 uppercase tracking-widest text-center text-indigo-400">JSON Export</h3>
+            <textarea id="backupText" readonly class="w-full h-32 glass-input rounded-2xl p-4 text-[10px] text-indigo-200/60 font-mono mb-6 outline-none resize-none bg-white/50 dark:bg-black/50"></textarea>
+            <button onclick="haptic(); copyToClipboard()" id="copyBtn" class="w-full bg-indigo-500 text-black dark:text-white py-4 rounded-2xl font-semibold mb-3 text-[10px] uppercase tracking-[0.2em] hover:bg-indigo-400 transition-colors shadow-lg shadow-indigo-500/20">📋 Code kopieren</button>
+            <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-black dark:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Schließen</button>
         </div>
     </div>
 
-    <div id="importModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
+    <div id="importModal" onclick="if(event.target === this) closeAllModals()" class="fixed inset-0 bg-white/80 dark:bg-black/80 backdrop-blur-xl hidden flex items-center justify-center p-6 z-50">
         <div class="glass p-8 rounded-[2.5rem] w-full max-w-md border-cyan-500/20">
-            <h3 class="text-lg font-black text-white mb-6 uppercase tracking-widest text-center text-cyan-400">JSON Import</h3>
-            <textarea id="importText" class="w-full h-32 glass-input rounded-2xl p-4 text-white text-xs font-mono mb-6 outline-none resize-none bg-black/50" placeholder="Backup Code hier einfügen..."></textarea>
-            <button onclick="haptic(); processImport()" class="w-full bg-cyan-500 text-black py-4 rounded-2xl font-extrabold mb-3 text-[10px] uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20">🚀 Daten überschreiben</button>
-            <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Abbrechen</button>
+            <h3 class="text-lg font-semibold text-black dark:text-white mb-6 uppercase tracking-widest text-center text-cyan-400">JSON Import</h3>
+            <textarea id="importText" class="w-full h-32 glass-input rounded-2xl p-4 text-black dark:text-white text-xs font-mono mb-6 outline-none resize-none bg-white/50 dark:bg-black/50" placeholder="Backup Code hier einfügen..."></textarea>
+            <button onclick="haptic(); processImport()" class="w-full bg-cyan-500 text-black py-4 rounded-2xl font-semibold mb-3 text-[10px] uppercase tracking-[0.2em] hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20">🚀 Daten überschreiben</button>
+            <button onclick="haptic(); closeAllModals()" class="w-full py-3 text-gray-500 hover:text-black dark:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">Abbrechen</button>
         </div>
     </div>
 
     <!-- Aktiver Scanner: lokale OCR plus Offline-Auswertung, kein API Key. -->
     <script>
         (() => {
+
+            // Theme Management
+            function applyTheme() {
+                const theme = localStorage.getItem('subzen_theme') || 'system';
+                const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                const select = document.getElementById('themeSelect');
+                if (select) select.value = theme;
+            }
+            applyTheme();
+            
+            window.saveThemeSettings = function() {
+                const select = document.getElementById('themeSelect');
+                if(select) {
+                    localStorage.setItem('subzen_theme', select.value);
+                    applyTheme();
+                }
+            };
+            
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if ((localStorage.getItem('subzen_theme') || 'system') === 'system') {
+                    applyTheme();
+                }
+            });
+
             const DB_KEY = 'subzen_data_premium_v1';
             const REMINDER_KEY = 'subzen_reminder_settings_v1';
             const VALID_ICONS = ['🎬', '🎵', '🎮', '🏋️', '📱', '💳', '📦', '🚗'];
@@ -647,15 +695,15 @@
 
                 if (!isSecurePWAContext()) {
                     status.innerText = 'HTTPS nötig';
-                    status.className = 'text-[10px] uppercase tracking-widest text-rose-300 font-black text-right';
+                    status.className = 'text-xs font-medium tracking-wide text-rose-300 font-semibold text-right';
                     hint.innerText = 'PWA und Mitteilungen funktionieren auf dem iPhone nur über HTTPS oder localhost, nicht direkt als Datei.';
                 } else if (isStandaloneApp()) {
                     status.innerText = 'Installiert';
-                    status.className = 'text-[10px] uppercase tracking-widest text-emerald-300 font-black text-right';
+                    status.className = 'text-xs font-medium tracking-wide text-emerald-300 font-semibold text-right';
                     hint.innerText = 'SubZen läuft als Homescreen-App. Offline-Cache und Mitteilungen können genutzt werden.';
                 } else {
                     status.innerText = 'Browser-Modus';
-                    status.className = 'text-[10px] uppercase tracking-widest text-amber-300 font-black text-right';
+                    status.className = 'text-xs font-medium tracking-wide text-amber-300 font-semibold text-right';
                     hint.innerText = 'iPhone: Safari teilen → Zum Home-Bildschirm. Danach SubZen über das neue Icon öffnen.';
                 }
             }
@@ -1336,12 +1384,12 @@
 
                 if (subscriptions.length === 0) {
                     listEl.innerHTML = `
-                        <div class="glass p-10 rounded-[2rem] text-center border-dashed border-white/10 mt-4 slide-up">
-                            <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5 shadow-inner">
+                        <div class="glass p-10 rounded-[2rem] text-center border-dashed border-black/10 dark:border-white/10 mt-4 slide-up">
+                            <div class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-black/5 dark:border-white/5 shadow-inner">
                                 <span class="text-3xl opacity-50">🍃</span>
                             </div>
-                            <h3 class="text-white font-extrabold text-xl mb-2">Absolute Ruhe</h3>
-                            <p class="text-gray-400 text-sm leading-relaxed font-medium">Dein Finanz-Zen ist perfekt. Keine aktiven Abos.<br>Scanne eine Rechnung, um zu starten.</p>
+                            <h3 class="text-black dark:text-white font-semibold text-xl mb-2">Absolute Ruhe</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed font-medium">Dein Finanz-Zen ist perfekt. Keine aktiven Abos.<br>Scanne eine Rechnung, um zu starten.</p>
                         </div>
                     `;
                 }
@@ -1415,7 +1463,7 @@
                     if (diffDays <= 3) progressColor = 'bg-rose-500 shadow-[0_0_15px_rgba(225,29,72,0.5)]';
 
                     const card = document.createElement('div');
-                    card.className = `card-enter glass-card rounded-[2rem] flex flex-col relative overflow-hidden cursor-pointer ${isUrgent && sub.status !== 'cancelled' ? 'border-rose-500/30 shadow-[0_0_30px_rgba(225,29,72,0.1)]' : ''} ${sub.status === 'cancelled' ? 'opacity-50 grayscale-[50%]' : ''}`;
+                    card.className = `card-enter glass-card rounded-[2.5rem] flex flex-col relative overflow-hidden cursor-pointer ${isUrgent && sub.status !== 'cancelled' ? 'border-rose-500/50 shadow-[0_0_40px_rgba(225,29,72,0.15)]' : ''} ${sub.status === 'cancelled' ? 'opacity-60' : ''}`;
                     card.style.animationDelay = `${(isHistory ? 0 : displayIndex) * 0.08}s`;
                     card.onclick = event => {
                         if (event.target.closest('button')) return;
@@ -1423,42 +1471,42 @@
                         openActionMenu(originalIndex);
                     };
                     card.innerHTML = `
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-5 z-10">
+                        <div class="p-6 md:p-8">
+                            <div class="flex items-center justify-between mb-6 z-10">
                                 <div class="flex items-center gap-5">
-                                    <div class="text-3xl bg-black/40 w-16 h-16 flex items-center justify-center rounded-[1.2rem] border border-white/5 shadow-inner">${icon}</div>
+                                    <div class="text-3xl glass w-16 h-16 flex items-center justify-center rounded-[1.5rem] shadow-sm">${icon}</div>
                                     <div>
-                                        <h3 class="font-extrabold text-xl text-white tracking-tight">${escapeHTML(sub.name || 'Unbenannt')}${trialBadge}</h3>
-                                        <p class="text-gray-400 mt-1.5 flex items-center gap-2">
-                                            <span class="font-extrabold text-white text-lg">${price.toFixed(2).replace('.', ',')} €</span>
-                                            <span class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">/ ${sub.cycle === 'monthly' ? 'Monat' : 'Jahr'}</span>
+                                        <h3 class="font-semibold text-2xl text-black dark:text-white tracking-tight">${escapeHTML(sub.name || 'Unbenannt')}${trialBadge}</h3>
+                                        <p class="text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                                            <span class="font-medium text-black dark:text-white text-xl">${price.toFixed(2).replace('.', ',')} €</span>
+                                            <span class="text-xs text-gray-500 tracking-wide">/ ${sub.cycle === 'monthly' ? 'Monat' : 'Jahr'}</span>
                                         </p>
                                     </div>
                                 </div>
-                                <button onclick="haptic(); openActionMenu(${originalIndex})" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-transparent hover:border-white/10 transition-all z-20 group" aria-label="Abo Aktionen öffnen">
-                                    <span class="group-hover:scale-110 transition-transform text-xl leading-none">⋯</span>
+                                <button onclick="haptic(); openActionMenu(${originalIndex})" class="w-12 h-12 flex items-center justify-center rounded-full glass hover:bg-black/10 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:text-black dark:text-white transition-all z-20" aria-label="Abo Aktionen öffnen">
+                                    <span class="text-xl leading-none">⋯</span>
                                 </button>
                             </div>
 
-                            <div class="flex items-center justify-between bg-black/40 px-5 py-4 rounded-2xl border border-white/5 z-10 shadow-inner">
+                            <div class="flex items-center justify-between glass px-6 py-4 rounded-[1.5rem] z-10 shadow-sm">
                                 <div class="flex flex-col gap-1">
-                                    <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">${paymentLabel}</span>
-                                    <span class="text-xs text-gray-300 font-bold tracking-wider">${Number.isNaN(subDate.getTime()) ? 'Kein Datum' : subDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                                    <span class="text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-widest">${paymentLabel}</span>
+                                    <span class="text-sm text-gray-800 dark:text-gray-200 font-medium tracking-wide">${Number.isNaN(subDate.getTime()) ? 'Kein Datum' : subDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                                 </div>
                                 <div class="flex flex-col items-end gap-1">
-                                    <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">${escapeHTML(paymentMethod)}</span>
-                                    <span class="text-[11px] ${colorClass} font-bold tracking-wider">${sub.status === 'cancelled' && !isHistory ? 'Gekündigt' : escapeHTML(timeLabel)}</span>
+                                    <span class="text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-widest">${escapeHTML(paymentMethod)}</span>
+                                    <span class="text-[13px] ${colorClass} font-medium tracking-wide">${sub.status === 'cancelled' && !isHistory ? 'Gekündigt' : escapeHTML(timeLabel)}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <button onclick="haptic(); toggleStatus(${originalIndex})" class="w-full py-4 text-[10px] uppercase tracking-[0.2em] font-extrabold border-t ${sub.status === 'cancelled' ? 'border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400' : 'border-white/5 bg-transparent hover:bg-white/5 text-gray-400 hover:text-white'} transition-all z-10">
+                        <button onclick="haptic(); toggleStatus(${originalIndex})" class="w-full py-5 text-[11px] uppercase tracking-widest font-medium border-t ${sub.status === 'cancelled' ? 'border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400' : 'border-black/10 dark:border-white/10 glass-input hover:bg-black/10 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:text-black dark:text-white'} transition-all z-10">
                             ${btnText}
                         </button>
 
                         ${(!isHistory && sub.status !== 'cancelled') ? `
-                            <div class="absolute bottom-0 left-0 w-full h-[3px] bg-black/50">
-                                <div class="h-full ${progressColor} progress-bar-fill rounded-r-full" style="width: ${progressPercent}%;"></div>
+                            <div class="absolute bottom-0 left-0 w-full h-[2px] bg-transparent">
+                                <div class="h-full ${progressColor.replace('bg-blue-500', 'bg-white').replace('shadow-[0_0_15px_rgba(59,130,246,0.5)]', 'shadow-[0_0_10px_rgba(255,255,255,0.5)')} progress-bar-fill rounded-r-full" style="width: ${progressPercent}%;"></div>
                             </div>
                         ` : ''}
                     `;
@@ -1473,13 +1521,11 @@
                 });
 
                 if (subscriptions.length > 0 && displayIndex === 0 && filterValue !== 'all') {
-                    listEl.innerHTML = `<div class="glass p-6 rounded-[2rem] text-center border-dashed border-white/10 mt-2"><p class="text-gray-400 text-sm font-medium">Keine aktiven Abos für ${escapeHTML(filterValue)} gefunden.</p></div>`;
+                    listEl.innerHTML = `<div class="glass p-6 rounded-[2rem] text-center border-dashed border-black/10 dark:border-white/10 mt-2"><p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Keine aktiven Abos für ${escapeHTML(filterValue)} gefunden.</p></div>`;
                 }
 
                 $('activeMonthly').innerText = `${activeMonthly.toFixed(2).replace('.', ',')} €`;
                 $('activeYearly').innerText = `${activeYearly.toFixed(2).replace('.', ',')} €`;
-                $('savedMonthly').innerText = `+ ${savedMonthly.toFixed(2).replace('.', ',')} € gespart`;
-                $('savedYearly').innerText = `+ ${savedYearly.toFixed(2).replace('.', ',')} € gespart`;
                 $('historyCount').innerText = historyCount;
                 $('historyList').parentElement.style.display = historyCount === 0 ? 'none' : 'block';
 
@@ -1494,12 +1540,12 @@
                 if (urgentSubs.length > 0) {
                     insightBox.className = 'glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 border-l-rose-500 shadow-[0_0_25px_rgba(225,29,72,0.15)]';
                     insightBox.querySelector('span').innerText = '⚠️';
-                    insightText.innerHTML = `<span class="text-rose-400 font-extrabold tracking-wide">${urgentSubs.length} Abo(s)</span> erfordern baldige Aufmerksamkeit!`;
+                    insightText.innerHTML = `<span class="text-rose-400 font-semibold tracking-wide">${urgentSubs.length} Abo(s)</span> erfordern baldige Aufmerksamkeit!`;
                     insightBox.style.display = 'flex';
                 } else if (mostExpensive.price > 0) {
                     insightBox.className = 'glass w-full rounded-2xl p-4 mb-8 flex items-center gap-4 border-l-2 border-l-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.1)]';
                     insightBox.querySelector('span').innerText = '💡';
-                    insightText.innerHTML = `Dein größter Posten: <span class="text-cyan-300 font-extrabold tracking-wide">${escapeHTML(mostExpensive.name)} (${mostExpensive.price.toFixed(2).replace('.', ',')} €)</span>`;
+                    insightText.innerHTML = `Dein größter Posten: <span class="text-cyan-300 font-semibold tracking-wide">${escapeHTML(mostExpensive.name)} (${mostExpensive.price.toFixed(2).replace('.', ',')} €)</span>`;
                     insightBox.style.display = 'flex';
                 } else {
                     insightBox.style.display = 'none';
@@ -1524,10 +1570,10 @@
                 const statusBtn = $('actionStatusBtn');
                 if (sub.status === 'cancelled') {
                     statusBtn.innerText = 'Reaktivieren';
-                    statusBtn.className = 'w-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-emerald-500/15 transition-colors';
+                    statusBtn.className = 'w-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide hover:bg-emerald-500/15 transition-colors';
                 } else {
                     statusBtn.innerText = sub.status === 'trial' ? 'Probeabo beenden' : 'Kündigen';
-                    statusBtn.className = 'w-full bg-amber-500/10 border border-amber-500/20 text-amber-300 py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-amber-500/15 transition-colors';
+                    statusBtn.className = 'w-full bg-amber-500/10 border border-amber-500/20 text-amber-300 py-4 rounded-2xl font-semibold text-xs font-medium tracking-wide hover:bg-amber-500/15 transition-colors';
                 }
                 $('actionModal').classList.remove('hidden');
             }
